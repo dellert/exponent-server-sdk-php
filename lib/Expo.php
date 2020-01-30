@@ -118,6 +118,29 @@ class Expo
 
         return $response;
     }
+    
+    public function notifyNoSub($interests, $token, array $data)
+    {
+        $postData = [];
+
+        if (is_string($interests)) {
+            $interests = [$interests];
+        }
+
+        if (count($interests) == 0) {
+            throw new ExpoException('Interests array must not be empty.');
+        }
+
+        $postData[] = $data + ['to' => $token];
+
+        $ch = $this->prepareCurl();
+
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+
+        $response = $this->executeCurl($ch);
+
+        return $response;
+    }
 
     /**
      * Determines if the request we sent has failed completely
